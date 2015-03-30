@@ -1,14 +1,6 @@
 __author__ = 'Артём'
 from random import randint
-import sys
-import re
-
-class Edge():
-    def __init__(self, source, destination):
-        self.From = source
-        self.To = destination
-        self.Count = 1
-
+from datastructures.Edge import Edge
 
 class Graph():
     def __init__(self):
@@ -39,6 +31,8 @@ class Graph():
         total = 0
         for pair in nodes:
             total += pair.Count
+        if total == 0:
+            return None
         drop = randint(1, total)
         for pair in nodes:
             drop -= pair.Count
@@ -49,37 +43,3 @@ class Graph():
     def random_word(self):
         drop = randint(0, len(self.edges))
         return self.edges[drop].From
-
-g = Graph()
-
-
-def read_file(path):
-    file = open(path)
-    i = 1
-    for line in file:
-        process_line(line)
-        print(str(i))
-        i += 1
-
-
-def process_line(line):
-    """split by ,:- whitespaces, leave ., ..., !, ?"""
-    arr = re.split("[\—\-\,\s\"\:\[\]]+", line)
-    for i in range(1,len(arr)):
-        if arr[i-1][:-1] != '.' or arr[i-1][:-1] != '!' or arr[i-1][:-1] != '?':
-            g.add_pair(arr[i-1].lower(), arr[i].lower())
-
-
-def make_text(words_count):
-    last = g.random_word()
-    buffer = last
-    for i in range(0, words_count):
-        last = g.next_word(last)
-        if last is None:
-            last = g.random_word()
-        buffer = buffer + " " + last
-    return buffer
-
-
-read_file(sys.argv[1])
-print(make_text(200))
